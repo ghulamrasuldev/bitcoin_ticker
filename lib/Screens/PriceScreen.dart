@@ -71,7 +71,9 @@ class _PriceScreenState extends State<PriceScreen> {
               items: getPaperCurrency(),
               style: Theme.of(context).textTheme.title,
               onChanged: (value) {
-                defaultValue = value;
+                setState(() {
+                  defaultValue = value;
+                });
               },
             ),
           ),
