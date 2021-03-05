@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:bitcoin_ticker/Utilities/coin_data.dart';
@@ -53,7 +53,7 @@ class _PriceScreenState extends State<PriceScreen> {
   Widget getPicker() {
     if (Platform.isAndroid) {
       return androidDropdown();
-    } else  {
+    } else {
       return iOSPicker();
     }
   }
