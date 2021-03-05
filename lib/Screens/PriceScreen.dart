@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:bitcoin_ticker/Utilities/coin_data.dart';
+import 'package:flutter/cupertino.dart';
 
 class PriceScreen extends StatefulWidget {
   @override
@@ -7,25 +10,56 @@ class PriceScreen extends StatefulWidget {
 }
 
 class _PriceScreenState extends State<PriceScreen> {
-  String defaultValue = 'PKR';
+  String selectedCurrency = 'PKR';
   // ignore: non_constant_identifier_names
-
-  List<DropdownMenuItem<String>> getPaperCurrency() {
-    List<DropdownMenuItem<String>> PaperCurrencies = [];
-    for (int i = 0; i < currenciesList.length; i++) {
-      String currencyName = currenciesList[i];
-      DropdownMenuItem<String> newItem = DropdownMenuItem(
-        child: Text(currencyName),
-        value: currencyName,
+  DropdownButton<String> androidDropdown() {
+    List<DropdownMenuItem<String>> dropdownItems = [];
+    for (String currency in currenciesList) {
+      var newItem = DropdownMenuItem(
+        child: Text(currency),
+        value: currency,
       );
-      PaperCurrencies.add(newItem);
+      dropdownItems.add(newItem);
     }
-    return PaperCurrencies;
+    return DropdownButton<String>(
+      value: selectedCurrency,
+      items: dropdownItems,
+      onChanged: (value) {
+        setState(() {
+          selectedCurrency = value;
+        });
+      },
+    );
+  }
+
+  CupertinoPicker iOSPicker() {
+    List<Text> pickerItems = [];
+    for (String currency in currenciesList) {
+      pickerItems.add(Text(currency));
+    }
+
+    return CupertinoPicker(
+      backgroundColor: Colors.lightBlue,
+      itemExtent: 32.0,
+      onSelectedItemChanged: (selectedIndex) {
+        setState(() {
+          selectedCurrency = currenciesList[selectedIndex];
+        });
+      },
+      children: pickerItems,
+    );
+  }
+
+  Widget getPicker() {
+    if (Platform.isAndroid) {
+      return androidDropdown();
+    } else  {
+      return iOSPicker();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    getPaperCurrency();
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -63,19 +97,7 @@ class _PriceScreenState extends State<PriceScreen> {
             alignment: Alignment.center,
             padding: EdgeInsets.only(bottom: 30.0),
             color: Colors.lightBlue,
-            child: DropdownButton<String>(
-              autofocus: true,
-              focusColor: Colors.blue,
-              dropdownColor: Colors.lightBlue.shade300,
-              value: defaultValue,
-              items: getPaperCurrency(),
-              style: Theme.of(context).textTheme.title,
-              onChanged: (value) {
-                setState(() {
-                  defaultValue = value;
-                });
-              },
-            ),
+            child: getPicker(),
           ),
         ],
       ),
