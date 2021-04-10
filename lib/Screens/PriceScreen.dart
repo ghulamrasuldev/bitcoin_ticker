@@ -28,6 +28,7 @@ class _PriceScreenState extends State<PriceScreen> {
       dropdownItems.add(newItem);
     }
     return DropdownButton<String>(
+      isDense: true,
       value: selectedCurrency,
       items: dropdownItems,
       onChanged: (value) async{
